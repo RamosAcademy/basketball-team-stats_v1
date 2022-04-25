@@ -148,7 +148,8 @@ Enter an option > '''
                     "----------------------> Please choose a number corresponding to a team.")
             else:
                 print(f"""
-## {league_data[team_choice - 1]['team_name']} Team Stats
+Team: {league_data[team_choice - 1]['team_name']}
+-----------------------
 Total Players: {len(league_data[team_choice - 1]['players'])}
 Total experienced: {league_data[team_choice - 1]['experienced']}
 Total inexperienced: {league_data[team_choice - 1]['inexperienced']}
