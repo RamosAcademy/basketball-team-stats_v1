@@ -1,5 +1,6 @@
 import constants
 import copy
+import random
 
 """ TODO
 [X] Create app.py
@@ -17,7 +18,7 @@ PLAYERS = constants.PLAYERS
 
 # 2) clean the player data without changing the original data
 # sauce: https://teamtreehouse.com/library/overwriting-data-in-python
-my_teams = copy.deepcopy(TEAMS)
+league = copy.deepcopy(TEAMS)
 my_players = copy.deepcopy(PLAYERS)
 
 
@@ -47,16 +48,63 @@ def clean_data():
 
 def balance_teams():
     """ Make sure the teams have the same number of total players on them when your team balancing function has finished."""
+    players = clean_data()
+    total_players = len(players)
+    total_teams = len(league)
+    num_players_team = int(total_players / total_teams)
+    # TODO: handle for an odd number of players in the league
+    balance = int(num_players_team / 2)
 
-    # To find out how many players should be on each team, divide the length of players by the number of teams. Ex:
-    # num_players_team = len(PLAYERS) / len(TEAMS)
-    # balance the teams so that each team has the same number of experienced vs. inexperienced players.
-    #    If this is done correctly each team stats should display the same number count for experienced total and inexperienced total #    as   well as the same total number of players on the team.
+    experienced = []
+    inexperienced = []
+    for player in players:
+        if player['experience'] == True:
+            experienced.append(player)
+        else:
+            inexperienced.append(player)
+    random.shuffle(experienced)
+    random.shuffle(inexperienced)
 
-    pass
+    awesome_league = []
+    for team in league:
+        team_roster = {  # new collection of player data
+            'team_name': team,
+            'players': [],
+            'guardians': '',
+            'experienced': 0,
+            'inexperienced': 0,
+            'avg_height': 0,
+        }
+        for i in range(balance):
+            team_roster['players'].append(experienced.pop())
+            team_roster['players'].append(inexperienced.pop())
+
+        guardians = []
+        heights = []
+        for i in range(len(team_roster['players'])):
+            guardian_list_to_str = ", ".join(
+                team_roster['players'][i]['guardians'])
+            guardians.append(guardian_list_to_str)
+
+            if team_roster['players'][i]['experience'] == True:
+                team_roster['experienced'] += 1
+            else:
+                team_roster['inexperienced'] += 1
+
+            heights.append(team_roster['players'][i]['height'])
+
+        team_roster['guardians'] = ", ".join(guardians)
+        team_roster['avg_height'] = round(
+            sum(heights) / len(team_roster['players']), 2)
+
+        awesome_league.append(team_roster)
+    return(awesome_league)
 
 
 def results():
+    league_data = balance_teams()
+
+    print(league_data)
     # number of inexperienced players on that team
     # number of experienced players on that team
     # the average height of the team
@@ -67,4 +115,4 @@ def results():
 
 
 if __name__ == "__main__":
-    clean_data()
+    results()
