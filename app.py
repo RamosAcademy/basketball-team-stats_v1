@@ -70,6 +70,7 @@ def balance_teams():
         team_roster = {  # new collection of player data
             'team_name': team,
             'players': [],
+            'player_names': '',
             'guardians': '',
             'experienced': 0,
             'inexperienced': 0,
@@ -79,9 +80,13 @@ def balance_teams():
             team_roster['players'].append(experienced.pop())
             team_roster['players'].append(inexperienced.pop())
 
+        player_names = []
         guardians = []
         heights = []
         for i in range(len(team_roster['players'])):
+            player_names.append(team_roster['players'][i]['name'])
+            team_roster['player_names'] = ", ".join(player_names)
+
             guardian_list_to_str = ", ".join(
                 team_roster['players'][i]['guardians'])
             guardians.append(guardian_list_to_str)
@@ -104,14 +109,74 @@ def balance_teams():
 def results():
     league_data = balance_teams()
 
-    print(league_data)
-    # number of inexperienced players on that team
-    # number of experienced players on that team
-    # the average height of the team
-    # the guardians of all the players on that team (as a comma-separated string)
-    #   You can calculate the average height for a given team by keeping a running sum total
-    #   of each players height on the team and dividing that total by the total number of players on that team.
-    pass
+    message = '''
+BASKETBALL TEAM STATS TOOL
+
+
+---- MENU----
+
+Here are your choices:
+
+1. Display Team Stats
+2. Quit
+
+Enter an option > '''
+
+    menu_choice = int(input(message))
+    if menu_choice != 1 and menu_choice != 2:
+        raise Exception("Please choose 1 or 2.")
+
+    if menu_choice == 2:
+        return
+    else:
+        for i in range(len(league_data)):
+            print(f"\n{i+1}. {league_data[i]['team_name']}")
+
+    teams = list(range(len(league_data)+1))[1:]
+    team_choice = int(input("\nEnter an option > "))
+    if team_choice not in teams:
+        raise Exception("Please choose a number corresponding to a team.")
+    if team_choice == 1:
+        message = f'''
+## Team {league_data[team_choice - 1]['team_name']} Stats
+
+Total Players: {len(league_data[team_choice - 1]['players'])}
+Total experienced: {league_data[team_choice - 1]['experienced']}
+Total inexperienced: {league_data[team_choice - 1]['inexperienced']}
+Average height: {league_data[team_choice - 1]['avg_height']}
+
+Players on Team:
+{league_data[team_choice - 1]['player_names']}
+
+Guardians:
+{league_data[team_choice - 1]['guardians']}'''
+
+        print(message)
+
+
+"""
+## Team: Panthers Stats
+
+Total players: 6
+Total experienced: 3
+Total inexperienced: 3
+Average height: 42.5
+
+Players on Team:
+Karl Saygan, Chloe Alaska, Phillip Helm, Suzane Greenberg, Herschel Krustofski, Joe Smith
+
+Guardians:
+Heather Bledsoe, David Alaska, Jamie Alaska, Thomas Helm, Eva Jones, Henrietta Dumas, Hyman Krustofski, Rachel Krustofski, Jim Smith, Jan Smith
+
+Press ENTER to continue...
+"""
+# number of inexperienced players on that team
+# number of experienced players on that team
+# the average height of the team
+# the guardians of all the players on that team (as a comma-separated string)
+#   You can calculate the average height for a given team by keeping a running sum total
+#   of each players height on the team and dividing that total by the total number of players on that team.
+pass
 
 
 if __name__ == "__main__":
