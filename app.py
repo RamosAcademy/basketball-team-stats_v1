@@ -7,10 +7,10 @@ import random
 [X] Proper use of Dunder Main
 [X] Import from constants.py the players' data to be used within your program.
 [X] Create a clean_data function
-[ ] Create a balance_teams function
-[ ] Console readability
-[ ] Include additional stats for a given displayed team
-[ ] Quit Menu Option
+[X] Create a balance_teams function
+[X] Console readability
+[X] Include additional stats for a given displayed team
+[X] Quit Menu Option
 """
 # 1) read the existing player data from the PLAYERS constants provided in constants.py
 TEAMS = constants.TEAMS
@@ -52,7 +52,7 @@ def balance_teams():
     total_players = len(players)
     total_teams = len(league)
     num_players_team = int(total_players / total_teams)
-    # TODO: handle for an odd number of players in the league
+    # Future TODO: handle for an odd number of players in the league
     balance = int(num_players_team / 2)
 
     experienced = []
@@ -121,25 +121,34 @@ Here are your choices:
 2. Quit
 
 Enter an option > '''
+    keep_running = True
+    while keep_running:
+        try:
+            menu_choice = int(input(message))
+            if menu_choice != 1 and menu_choice != 2:
+                raise Exception(
+                    "----------------------> Please choose 1 or 2.")
+        except Exception:
+            print("----------------------> Please choose 1 or 2")
+        else:
+            if menu_choice == 2:
+                return
+            else:
+                for i in range(len(league_data)):
+                    print(f"\n{i+1}. {league_data[i]['team_name']}")
 
-    menu_choice = int(input(message))
-    if menu_choice != 1 and menu_choice != 2:
-        raise Exception("Please choose 1 or 2.")
-
-    if menu_choice == 2:
-        return
-    else:
-        for i in range(len(league_data)):
-            print(f"\n{i+1}. {league_data[i]['team_name']}")
-
-    teams = list(range(len(league_data)+1))[1:]
-    team_choice = int(input("\nEnter an option > "))
-    if team_choice not in teams:
-        raise Exception("Please choose a number corresponding to a team.")
-    if team_choice == 1:
-        message = f'''
-## Team {league_data[team_choice - 1]['team_name']} Stats
-
+            teams = list(range(len(league_data)+1))[1:]
+            try:
+                team_choice = int(input("\nEnter an option > "))
+                if team_choice not in teams:
+                    raise Exception(
+                        "----------------------> Please choose a number corresponding to a team.")
+            except Exception:
+                print(
+                    "----------------------> Please choose a number corresponding to a team.")
+            else:
+                print(f"""
+## {league_data[team_choice - 1]['team_name']} Team Stats
 Total Players: {len(league_data[team_choice - 1]['players'])}
 Total experienced: {league_data[team_choice - 1]['experienced']}
 Total inexperienced: {league_data[team_choice - 1]['inexperienced']}
@@ -149,34 +158,13 @@ Players on Team:
 {league_data[team_choice - 1]['player_names']}
 
 Guardians:
-{league_data[team_choice - 1]['guardians']}'''
+{league_data[team_choice - 1]['guardians']}\n""")
 
-        print(message)
-
-
-"""
-## Team: Panthers Stats
-
-Total players: 6
-Total experienced: 3
-Total inexperienced: 3
-Average height: 42.5
-
-Players on Team:
-Karl Saygan, Chloe Alaska, Phillip Helm, Suzane Greenberg, Herschel Krustofski, Joe Smith
-
-Guardians:
-Heather Bledsoe, David Alaska, Jamie Alaska, Thomas Helm, Eva Jones, Henrietta Dumas, Hyman Krustofski, Rachel Krustofski, Jim Smith, Jan Smith
-
-Press ENTER to continue...
-"""
-# number of inexperienced players on that team
-# number of experienced players on that team
-# the average height of the team
-# the guardians of all the players on that team (as a comma-separated string)
-#   You can calculate the average height for a given team by keeping a running sum total
-#   of each players height on the team and dividing that total by the total number of players on that team.
-pass
+                restart = input("\nPress ENTER to continue...")
+                if restart == "":
+                    keep_running = True
+                else:
+                    keep_running = False
 
 
 if __name__ == "__main__":
